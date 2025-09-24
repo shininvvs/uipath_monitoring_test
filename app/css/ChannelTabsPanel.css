@@ -1,0 +1,339 @@
+        .channel-tabs-container {
+          background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+          border-radius: 20px;
+          padding: 32px;
+          margin: 20px auto;
+          max-width: 1200px;
+          min-height: 500px;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          border: 1px solid rgba(226, 232, 240, 0.6);
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .controls-section {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 28px;
+          padding: 24px 0;
+          border-bottom: 2px solid #f1f5f9;
+        }
+
+        .control-buttons {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+        }
+
+        .primary-button {
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          color: white;
+          padding: 12px 24px;
+          border: none;
+          border-radius: 12px;
+          font-weight: 700;
+          font-size: 16px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        .primary-button:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .secondary-button {
+          background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+          color: #475569;
+          padding: 12px 20px;
+          border: none;
+          border-radius: 12px;
+          font-weight: 600;
+          font-size: 16px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .secondary-button:hover {
+          background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+          transform: translateY(-1px);
+        }
+
+        .stats-info {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          color: #64748b;
+          font-weight: 600;
+          font-size: 16px;
+        }
+
+        .channel-count-badge {
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 10px;
+          font-weight: 700;
+          box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+
+        .tabs-container {
+          display: flex;
+          gap: 12px;
+          margin-bottom: 24px;
+          overflow-x: auto;
+          padding: 8px 0;
+          align-items: center;
+          min-height: 60px;
+        }
+
+        .channel-tab {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 20px;
+          border-radius: 14px;
+          font-weight: 700;
+          font-size: 15px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+          position: relative;
+          border: 2px solid transparent;
+          user-select: none;
+          min-width: 120px;
+          justify-content: center;
+        }
+
+        .channel-tab.active {
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          color: white;
+          border-color: #1e40af;
+          box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+          transform: translateY(-2px);
+          z-index: 10;
+        }
+
+        .channel-tab.inactive {
+          background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+          color: #475569;
+          border-color: #e2e8f0;
+        }
+
+        .channel-tab.inactive:hover {
+          background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex: 1;
+          /* Ensure content area can shrink and doesn't overflow */
+          min-width: 0;
+        }
+
+        .tab-name {
+          font-weight: inherit;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 150px;
+          /* Add white-space to prevent wrapping */
+          white-space: nowrap;
+        }
+
+        .unread-badge {
+          background: #ef4444;
+          color: white;
+          border-radius: 50%;
+          font-size: 11px;
+          font-weight: 900;
+          padding: 3px 7px;
+          min-width: 18px;
+          text-align: center;
+          animation: pulse 2s infinite;
+          box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .close-button {
+          background: rgba(239, 68, 68, 0.1);
+          color: #dc2626;
+          border: none;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+          font-weight: 900;
+          font-size: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          flex-shrink: 0;
+          /* Removed margin-left to rely on parent's gap */
+        }
+
+        .close-button:hover {
+          background: #dc2626;
+          color: white;
+          transform: scale(1.1);
+        }
+
+        .search-section {
+          margin-bottom: 24px;
+        }
+
+        .search-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .search-input {
+          flex: 1;
+          max-width: 400px;
+          padding: 14px 20px;
+          border: 2px solid #e2e8f0;
+          border-radius: 12px;
+          font-size: 16px;
+          background: white;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        }
+
+        .search-input:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .clear-button {
+          background: #f1f5f9;
+          color: #475569;
+          border: none;
+          border-radius: 8px;
+          padding: 8px 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .clear-button:hover {
+          background: #e2e8f0;
+        }
+
+        .search-stats {
+          color: #64748b;
+          font-weight: 600;
+          margin-left: 12px;
+          font-size: 14px;
+        }
+
+        .content-area {
+          margin-top: 20px;
+        }
+
+        .empty-state {
+          text-align: center;
+          padding: 60px 20px;
+          color: #94a3b8;
+          font-size: 18px;
+          font-weight: 600;
+          background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+          border-radius: 16px;
+          border: 2px dashed #cbd5e1;
+        }
+
+        .empty-icon {
+          font-size: 48px;
+          margin-bottom: 16px;
+          opacity: 0.5;
+        }
+
+        .no-channels-state {
+          text-align: center;
+          padding: 80px 20px;
+          color: #64748b;
+        }
+
+        .no-channels-icon {
+          font-size: 64px;
+          margin-bottom: 24px;
+          opacity: 0.5;
+        }
+
+        .no-channels-title {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 12px;
+          color: #334155;
+        }
+
+        .no-channels-subtitle {
+          font-size: 16px;
+          margin-bottom: 24px;
+          line-height: 1.5;
+        }
+
+        .add-channel-hint {
+          background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+          color: #1e40af;
+          padding: 16px 24px;
+          border-radius: 12px;
+          font-weight: 600;
+          border: 2px solid #93c5fd;
+        }
+
+        .debug-info {
+          position: fixed;
+          top: 10px;
+          right: 10px;
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 8px;
+          border-radius: 4px;
+          font-size: 12px;
+          z-index: 1000;
+          font-family: monospace;
+          max-width: 250px;
+        }
+
+        .debug-line {
+          margin: 2px 0;
+        }
+
+        @media (max-width: 768px) {
+          .channel-tabs-container {
+            padding: 20px;
+            margin: 10px;
+          }
+
+          .controls-section {
+            flex-direction: column;
+            gap: 16px;
+            align-items: stretch;
+          }
+
+          .tabs-container {
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+
+          .channel-tab {
+            min-width: auto;
+            flex: 1;
+            min-width: 100px;
+          }
+
+          .tab-name {
+            max-width: 80px;
+          }
+        }

@@ -1,0 +1,33 @@
+.quick-button {
+  padding: 4px 12px;
+  border: 1px solid #555;
+  background-color: #3a3a3a;
+  color: #cccccc;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
+}
+
+.quick-button:hover {
+  background-color: #4a4a4a;
+}
+
+/* 📱 태블릿 (768px 이하) */
+@media (max-width: 768px) {
+  .quick-button {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+}
+
+/* 📱 모바일 (480px 이하) */
+@media (max-width: 480px) {
+  .quick-button {
+    font-size: 10px;
+    padding: 3px 8px;
+    flex: 1;                /* 버튼들이 한 줄에 꽉 차게 */
+    text-align: center;     /* 글자 가운데 정렬 */
+  }
+}

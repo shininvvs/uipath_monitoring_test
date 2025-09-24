@@ -1,0 +1,549 @@
+/* Channel Card Styles */
+.channel-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.channel-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #e9ecef 0%, #e9ecef 100%);
+  transition: all 0.3s ease;
+}
+
+.channel-card.error::before {
+  background: linear-gradient(90deg, #dc3545 0%, #fd7e14 100%);
+}
+
+.channel-card.delayed::before {
+  background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+}
+
+.channel-card.normal::before {
+  background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+}
+
+/* 작업 상태에 따른 추가 스타일링 */
+.channel-card.in-progress::before {
+  background: linear-gradient(90deg, #007bff 0%, #17a2b8 100%);
+  animation: progress-pulse 2s infinite;
+}
+
+.channel-card.has-errors::before {
+  background: linear-gradient(90deg, #dc3545 0%, #fd7e14 100%);
+  animation: error-pulse 1.5s infinite;
+}
+
+.channel-card.completed::before {
+  background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+}
+
+@keyframes progress-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes error-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.channel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.channel-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.channel-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.channel-code {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-family: 'Monaco', 'Menlo', monospace;
+  background: #f8f9fa;
+  padding: 2px 8px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+/* 클라이언트 배지 */
+.client-badge {
+  font-size: 0.75rem;
+  color: #495057;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  align-self: flex-start;
+  margin-top: 4px;
+  border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
+.status-indicator {
+  margin-left: 12px;
+}
+
+.status-icon {
+  font-size: 1.5rem;
+  display: inline-block;
+}
+
+.status-icon.error {
+  animation: pulse-error 2s infinite;
+}
+
+.status-icon.delayed {
+  animation: pulse-warning 2s infinite;
+}
+
+.status-icon.progress {
+  animation: pulse-progress 1.5s infinite;
+  color: #007bff;
+}
+
+.status-icon.idle {
+  color: #6c757d;
+  opacity: 0.7;
+}
+
+@keyframes pulse-error {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes pulse-warning {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes pulse-progress {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* Progress Section */
+.progress-section {
+  margin-bottom: 24px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.progress-status {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2c3e50;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.progress-status.active {
+  background: rgba(0, 123, 255, 0.15);
+  color: #007bff;
+  border: 1px solid rgba(0, 123, 255, 0.2);
+  animation: status-pulse 2s infinite;
+}
+
+@keyframes status-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-fill.normal-progress {
+  background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+}
+
+.progress-fill.active-progress {
+  background: linear-gradient(90deg, #007bff 0%, #17a2b8 100%);
+  animation: progress-shimmer 2s infinite;
+}
+
+.progress-fill.error-progress {
+  background: linear-gradient(90deg, #dc3545 0%, #fd7e14 100%);
+}
+
+.progress-fill.completed-progress {
+  background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+}
+
+@keyframes progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 진행 세부 정보 */
+.progress-details {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.detail-item {
+  font-size: 0.75rem;
+  color: #6c757d;
+  background: rgba(108, 117, 125, 0.1);
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.detail-item.active {
+  color: #007bff;
+  background: rgba(0, 123, 255, 0.1);
+  border: 1px solid rgba(0, 123, 255, 0.2);
+}
+
+/* Stats Section */
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 16px 8px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.stat-value.error-count {
+  color: #dc3545;
+}
+
+.stat-value.progress-count {
+  color: #28a745;
+}
+
+.stat-value.unread-count {
+  color: #6f42c1;
+}
+
+/* 값이 있을 때 강조 */
+.stat-value.has-value {
+  transform: scale(1.05);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value.error-count.has-value {
+  animation: error-value-pulse 2s infinite;
+}
+
+.stat-value.progress-count.has-value {
+  animation: success-value-pulse 2s infinite;
+}
+
+@keyframes error-value-pulse {
+  0%, 100% { color: #dc3545; }
+  50% { color: #c82333; }
+}
+
+@keyframes success-value-pulse {
+  0%, 100% { color: #28a745; }
+  50% { color: #218838; }
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Work Session Summary */
+.work-session-summary {
+  background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+  border: 1px solid rgba(0, 123, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.session-time {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.session-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.session-stat {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.session-stat.in-progress {
+  color: #007bff;
+  background: rgba(0, 123, 255, 0.1);
+  border: 1px solid rgba(0, 123, 255, 0.2);
+}
+
+.session-stat.completed {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.session-stat.errors {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+/* Message Preview */
+.message-preview {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-left: 3px solid #dee2e6;
+}
+
+.channel-card.error .message-preview {
+  border-left-color: #dc3545;
+  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+}
+
+.channel-card.delayed .message-preview {
+  border-left-color: #ffc107;
+  background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
+}
+
+.channel-card.normal .message-preview {
+  border-left-color: #28a745;
+  background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+}
+
+.channel-card.in-progress .message-preview {
+  border-left-color: #007bff;
+  background: linear-gradient(135deg, #f0f8ff 0%, #cce7ff 100%);
+}
+
+.message-text {
+  font-size: 0.875rem;
+  color: #495057;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Card Badges */
+.card-badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.delayed-badge {
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+}
+
+.progress-badge {
+  background: linear-gradient(135deg, #007bff 0%, #17a2b8 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+  animation: progress-badge-pulse 2s infinite;
+}
+
+@keyframes progress-badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Responsive Design for Cards */
+@media (max-width: 768px) {
+  .channel-card {
+    padding: 20px;
+  }
+  
+  .stats-section {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .stat-item {
+    padding: 12px 4px;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .channel-name {
+    font-size: 1.125rem;
+  }
+  
+  .progress-details {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .session-stats {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .channel-card {
+    padding: 16px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .stats-section {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: 12px 16px;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem;
+  }
+  
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
