@@ -49,12 +49,8 @@ export default function DashboardPanel({
       const stats = getChannelStats(channel.code);
       if (stats.hasActiveWork) {
         channelsWithWork++;
-        if (stats.isInProgress) {
-          totalActiveWorks++;
-        }
-        if (!stats.isInProgress && stats.completedCount > 0) {
-          totalCompletedWorks++;
-        }
+        if (stats.isInProgress) totalActiveWorks++;
+        if (!stats.isInProgress && stats.completedCount > 0) totalCompletedWorks++;
         totalErrors += stats.errorCount;
       }
     });
@@ -96,7 +92,7 @@ export default function DashboardPanel({
         </div>
       </div>
 
-      {/* Enhanced Controls */}
+      {/* Controls */}
       <div className="dashboard-controls">
         <div className="controls-left">
           <div className="search-container">
@@ -117,7 +113,7 @@ export default function DashboardPanel({
               </button>
             )}
           </div>
-          
+
           {/* Quick Filters */}
           <div className="quick-filters">
             <span className="filter-label">Quick:</span>
@@ -141,7 +137,7 @@ export default function DashboardPanel({
             </button>
           </div>
         </div>
-        
+
         <button
           onClick={handleMarkAllAsRead}
           className="mark-all-button"
@@ -153,7 +149,7 @@ export default function DashboardPanel({
         </button>
       </div>
 
-      {/* Summary Banner (작업 진행중인 채널이 있을 때) */}
+      {/* Summary Banner */}
       {dashboardStats.channelsWithWork > 0 && (
         <div className="summary-banner">
           <div className="summary-content">
@@ -172,7 +168,7 @@ export default function DashboardPanel({
         </div>
       )}
 
-      {/* Channel Cards Grid */}
+      {/* Channel Cards */}
       <div className="cards-container">
         {filteredChannels.length === 0 && allChannels.length > 0 ? (
           <div className="empty-state">
@@ -181,7 +177,7 @@ export default function DashboardPanel({
             <p>No unread error messages found. Great job keeping things under control!</p>
             {search && (
               <div className="empty-search-help">
-                <p>검색어 "{search}"에 해당하는 채널이 없습니다.</p>
+                <p>검색어 <span>&quot;{search}&quot;</span>에 해당하는 채널이 없습니다.</p>
                 <button
                   onClick={() => setSearch("")}
                   className="clear-search-button-large"
@@ -218,7 +214,7 @@ export default function DashboardPanel({
         <div className="results-summary">
           <div className="results-text">
             Showing {filteredChannels.length} of {allChannels.length} channels
-            {search && ` for "${search}"`}
+            {search && <span> for &quot;{search}&quot;</span>}
           </div>
           {search && (
             <button
