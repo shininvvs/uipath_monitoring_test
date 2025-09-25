@@ -1,3 +1,5 @@
+// src/utils/messageParser.ts
+
 import { ParsedMessage, MessageType, SlackMessage } from '../types/message';
 import { MESSAGE_PATTERNS } from './constants';
 
@@ -76,3 +78,34 @@ export class MessageParser {
            parsedMessage.messageType !== MessageType.UNKNOWN;
   }
 }
+
+// 편의를 위한 직접 export 함수 (channel_name을 channel로 수정)
+export const parseSlackMessage = (text: string, channelName: string, timestamp: Date): ParsedMessage | null => {
+  const slackMessage: SlackMessage = {
+    text,
+    timestamp: (timestamp.getTime() / 1000).toString(),
+    channel: channelName, // channel_name -> channel로 수정
+    user: 'webhook'
+  };
+  
+  return MessageParser.parseSlackMessage(slackMessage);
+};
+
+// Webhook에서 사용할 수 있도록 SlackWebhookPayload 직접 처리하는 함수
+export const parseWebhookMessage = (payload: {
+  text: string;
+  channel_name: string;
+  timestamp: string;
+}): ParsedMessage | null => {
+  const slackMessage: SlackMessage = {
+    text: payload.text,
+    timestamp: payload.timestamp,
+    channel: payload.channel_name, // channel_name을 channel로 매핑
+    user: 'webhook'
+  };
+  
+  return MessageParser.parseSlackMessage(slackMessage);
+};
+
+// 기본 export
+export default MessageParser;

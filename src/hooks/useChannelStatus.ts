@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useRef } from 'react';
 import { Channel, ChannelUpdate, ChannelStatus } from '../types/channel';
-import { useWebSocket } from './useWebSocket';
+import { useSSE } from './useSSE';
 import { API_ENDPOINTS } from '../utils/constants';
 
 interface UseChannelStatusReturn {
@@ -22,7 +22,6 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>('connecting');
-
   const channelsMapRef = useRef<Map<string, Channel>>(new Map());
 
   // 채널 업데이트 처리 (화면 깜빡임 없이 부드럽게)
@@ -33,7 +32,7 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
       // 전체 채널 상태 응답 (초기 로드)
       const newChannels: Channel[] = data.channels;
       const newChannelsMap = new Map<string, Channel>();
-      
+
       newChannels.forEach(channel => {
         // Date 객체 변환
         const processedChannel: Channel = {
@@ -49,7 +48,6 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
       setChannels(Array.from(newChannelsMap.values()));
       setLastUpdate(new Date());
       console.log('✅ Full channel state updated');
-      
     } else if (data.channelId || data.channelName) {
       // 개별 채널 업데이트 (실시간)
       const update: ChannelUpdate = {
@@ -66,7 +64,6 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
 
       // 기존 채널 찾기 또는 새 채널 생성
       const existingChannel = channelsMapRef.current.get(update.channelId);
-      
       const updatedChannel: Channel = existingChannel ? {
         ...existingChannel,
         status: update.status,
@@ -77,7 +74,7 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
         isDelayed: update.isDelayed ?? existingChannel.isDelayed,
         lastUpdated: update.timestamp,
         // 상태에 따른 시간 업데이트
-        startTime: update.status === ChannelStatus.IN_PROGRESS && !existingChannel.startTime 
+        startTime: update.status === ChannelStatus.IN_PROGRESS && !existingChannel.startTime
           ? update.timestamp : existingChannel.startTime,
         endTime: (update.status === ChannelStatus.COMPLETED || update.status === ChannelStatus.ERROR || update.status === ChannelStatus.TIMEOUT)
           ? update.timestamp : existingChannel.endTime
@@ -97,13 +94,13 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
 
       // 맵 업데이트
       channelsMapRef.current.set(update.channelId, updatedChannel);
-      
+
       // 상태 업데이트 (부드러운 업데이트)
       setChannels(prev => {
         const newChannels = Array.from(channelsMapRef.current.values());
         return newChannels;
       });
-      
+
       setLastUpdate(new Date());
       console.log(`✅ Channel ${update.channelName} updated to ${update.status}`);
     }
@@ -119,67 +116,61 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
   const handleError = useCallback((errorData: any) => {
     setError(errorData.message || '알 수 없는 오류가 발생했습니다.');
     setConnectionStatus('error');
-    console.error('❌ WebSocket error:', errorData);
+    console.error('❌ SSE error:', errorData);
   }, []);
 
-  // WebSocket 연결
-  const { 
-    isConnected, 
-    isConnecting, 
-    error: wsError, 
+  // SSE 연결
+  const {
+    isConnected,
+    isConnecting,
+    error: sseError,
     requestChannelStatus,
-    reconnectCount 
-  } = useWebSocket({
+    reconnectCount
+  } = useSSE({
     onChannelUpdate: handleChannelUpdate,
     onConnectionStatus: handleConnectionStatus,
     onError: handleError
   });
 
-  // 수동 새로고침 (필요한 경우)
+  // 수동 새로고침
   const refreshChannels = useCallback(async () => {
-    if (isConnected) {
-      console.log('🔄 Requesting channel status via WebSocket...');
-      requestChannelStatus();
-    } else {
-      console.log('🔄 Fallback: Fetching channel status via HTTP...');
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        const response = await fetch(API_ENDPOINTS.CHANNEL_STATUS);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        if (!data.success) {
-          throw new Error(data.error || '채널 정보를 가져오는데 실패했습니다.');
-        }
-        
-        const channelData: Channel[] = (data.data || []).map((channel: any) => ({
-          ...channel,
-          lastUpdated: new Date(channel.lastUpdated),
-          startTime: channel.startTime ? new Date(channel.startTime) : undefined,
-          endTime: channel.endTime ? new Date(channel.endTime) : undefined
-        }));
+    console.log('🔄 Refreshing channel status...');
+    setIsLoading(true);
+    setError(null);
 
-        const newChannelsMap = new Map<string, Channel>();
-        channelData.forEach(channel => {
-          newChannelsMap.set(channel.id, channel);
-        });
-        
-        channelsMapRef.current = newChannelsMap;
-        setChannels(channelData);
-        setLastUpdate(new Date());
-        
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : '채널 정보 새로고침에 실패했습니다.';
-        setError(errorMessage);
-      } finally {
-        setIsLoading(false);
+    try {
+      const response = await fetch(API_ENDPOINTS.CHANNEL_STATUS);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || '채널 정보를 가져오는데 실패했습니다.');
+      }
+
+      const channelData: Channel[] = (data.data || []).map((channel: any) => ({
+        ...channel,
+        lastUpdated: new Date(channel.lastUpdated),
+        startTime: channel.startTime ? new Date(channel.startTime) : undefined,
+        endTime: channel.endTime ? new Date(channel.endTime) : undefined
+      }));
+
+      const newChannelsMap = new Map<string, Channel>();
+      channelData.forEach(channel => {
+        newChannelsMap.set(channel.id, channel);
+      });
+
+      channelsMapRef.current = newChannelsMap;
+      setChannels(channelData);
+      setLastUpdate(new Date());
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '채널 정보 새로고침에 실패했습니다.';
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
-  }, [isConnected, requestChannelStatus]);
+  }, []);
 
   // 채널 리셋
   const resetChannel = useCallback(async (channelId: string): Promise<boolean> => {
@@ -187,10 +178,12 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
       const response = await fetch(`${API_ENDPOINTS.CHANNELS}/${channelId}`, {
         method: 'DELETE',
       });
-      
+
       const data = await response.json();
+
       if (data.success) {
-        // WebSocket으로 즉시 업데이트될 것이므로 별도 새로고침 불필요
+        // 즉시 새로고침하여 업데이트된 상태 반영
+        await refreshChannels();
         console.log(`✅ Channel ${channelId} reset successfully`);
         return true;
       } else {
@@ -202,18 +195,18 @@ export const useChannelStatus = (): UseChannelStatusReturn => {
       setError(errorMessage);
       return false;
     }
-  }, []);
+  }, [refreshChannels]);
 
   // 연결 상태 통합 계산
   const finalConnectionStatus = useMemo(() => {
     if (isConnecting) return 'connecting';
     if (isConnected) return 'connected';
-    if (wsError) return 'error';
+    if (sseError) return 'error';
     return 'disconnected';
-  }, [isConnecting, isConnected, wsError]);
+  }, [isConnecting, isConnected, sseError]);
 
   // 에러 상태 통합
-  const finalError = error || wsError;
+  const finalError = error || sseError;
 
   return {
     channels,
